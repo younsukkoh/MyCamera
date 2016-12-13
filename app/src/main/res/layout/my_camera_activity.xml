@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextureView
+        android:id="@+id/mca_tv_cameraPreview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ToggleButton
+        android:id="@+id/mca_tb_toggleFlash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="Flash"
+        android:textOff="No Flash"
+        />
+
+    <Button
+        android:id="@+id/mca_b_changeCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="Change Camera" />
+
+    <Button
+        android:id="@+id/mca_b_capture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="Capture" />
+
+</RelativeLayout>
