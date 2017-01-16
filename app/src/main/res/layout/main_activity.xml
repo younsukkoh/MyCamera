@@ -22,6 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/am_b_camera"
-        android:text="Settings"/>
+        android:text="Gallery"/>
 
 </RelativeLayout>

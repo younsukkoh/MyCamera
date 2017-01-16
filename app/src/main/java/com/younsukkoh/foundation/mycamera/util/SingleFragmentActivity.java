@@ -1,9 +1,11 @@
-package com.younsukkoh.foundation.mycamera;
+package com.younsukkoh.foundation.mycamera.util;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+
+import com.younsukkoh.foundation.mycamera.R;
 
 /**
  * Created by Younsuk on 8/28/2015.

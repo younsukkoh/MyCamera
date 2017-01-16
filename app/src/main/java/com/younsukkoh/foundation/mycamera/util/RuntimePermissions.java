@@ -1,4 +1,4 @@
-package com.younsukkoh.foundation.mycamera;
+package com.younsukkoh.foundation.mycamera.util;
 
 import android.Manifest;
 import android.app.Activity;

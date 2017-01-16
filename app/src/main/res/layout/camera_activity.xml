@@ -5,12 +5,12 @@
     android:orientation="vertical">
 
     <TextureView
-        android:id="@+id/mca_tv_cameraPreview"
+        android:id="@+id/ca_tv_cameraPreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <ToggleButton
-        android:id="@+id/mca_tb_toggleFlash"
+        android:id="@+id/ca_tb_toggleFlash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textOn="Flash"
@@ -18,18 +18,25 @@
         />
 
     <Button
-        android:id="@+id/mca_b_changeCamera"
+        android:id="@+id/ca_b_changeCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:text="Change Camera" />
 
     <Button
-        android:id="@+id/mca_b_capture"
+        android:id="@+id/ca_b_capture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:text="Capture" />
+
+    <ProgressBar
+        android:id="@+id/ca_pb_progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

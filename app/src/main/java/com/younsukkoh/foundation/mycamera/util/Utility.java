@@ -1,4 +1,4 @@
-package com.younsukkoh.foundation.mycamera;
+package com.younsukkoh.foundation.mycamera.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import android.provider.Settings;
  */
 
 public class Utility {
-    public static final int REQUEST_CAMERA_PERMISSION = 1;
 
     /**
      * Take the user to application information, where the user can change permission status.

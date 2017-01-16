@@ -1,31 +1,30 @@
-package com.younsukkoh.foundation.mycamera;
+package com.younsukkoh.foundation.mycamera.camera;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.SensorManager;
-import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.OrientationEventListener;
-import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.younsukkoh.foundation.mycamera.MainActivity;
+import com.younsukkoh.foundation.mycamera.R;
+import com.younsukkoh.foundation.mycamera.util.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,20 +42,26 @@ import butterknife.Unbinder;
  * Created by Younsuk on 12/9/2016.
  */
 
-public class MyCameraActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener {
+public class CameraActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener {
 
-    private static final String TAG = MyCameraActivity.class.getSimpleName();
+    private static final String TAG = CameraActivity.class.getSimpleName();
 
     private Camera mCamera;
     private SurfaceTexture mSurfaceTexture;
     private boolean mCameraFacingBack = true;
     private Unbinder mUnbinder;
 
-    @BindView(R.id.mca_tv_cameraPreview)
+    @BindView(R.id.ca_tv_cameraPreview)
     TextureView mTextureView;
+    @BindView(R.id.ca_b_capture)
+    Button mCapture;
 
     private OrientationEventListener mOrientationListener;
     private int mCameraAngle;
+
+    @BindView(R.id.ca_pb_progressBar)
+    ProgressBar mProgressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +95,7 @@ public class MyCameraActivity extends AppCompatActivity implements TextureView.S
     private void setUpUI() {
         hideStatusBar();
 
-        setContentView(R.layout.my_camera_activity);
+        setContentView(R.layout.camera_activity);
 
         mUnbinder = ButterKnife.bind(this);
 
@@ -114,7 +119,7 @@ public class MyCameraActivity extends AppCompatActivity implements TextureView.S
             mOrientationListener.disable();
     }
 
-    @OnClick(R.id.mca_b_capture)
+    @OnClick(R.id.ca_b_capture)
     void capture(View view) {
         Log.i(Constants.DEBUG, "clicked");
 
@@ -122,6 +127,9 @@ public class MyCameraActivity extends AppCompatActivity implements TextureView.S
     }
 
     private void takePicture() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mCapture.setEnabled(false);
+
         mCamera.takePicture(
                 null, // ShutterCallback
                 null, // Raw PictureCallback
@@ -153,6 +161,9 @@ public class MyCameraActivity extends AppCompatActivity implements TextureView.S
                                 openCamera_startPreview(Camera.CameraInfo.CAMERA_FACING_FRONT);
 
                             Log.i(Constants.DEBUG, "onPictureTaken: All Done!");
+
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            mCapture.setEnabled(true);
                         }
                     }
                 }
@@ -214,7 +225,7 @@ public class MyCameraActivity extends AppCompatActivity implements TextureView.S
         getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
     }
 
-    @OnClick(R.id.mca_b_changeCamera)
+    @OnClick(R.id.ca_b_changeCamera)
     void changeCamera(View view) {
         if (mCameraFacingBack)
             openCamera_startPreview(Camera.CameraInfo.CAMERA_FACING_FRONT);
@@ -224,7 +235,7 @@ public class MyCameraActivity extends AppCompatActivity implements TextureView.S
         mCameraFacingBack = !mCameraFacingBack;
     }
 
-    @OnCheckedChanged(R.id.mca_tb_toggleFlash)
+    @OnCheckedChanged(R.id.ca_tb_toggleFlash)
     void toggleFlash(CompoundButton compoundButton, boolean flashOn) {
         // Check the device for camera flash feature
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
@@ -258,9 +269,10 @@ public class MyCameraActivity extends AppCompatActivity implements TextureView.S
             mCamera.setDisplayOrientation(90);
 
             // Set camera to continually auto-focus
-            Camera.Parameters parameters = mCamera.getParameters();
-            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-            mCamera.setParameters(parameters);
+            // TODO WHEN USING FRONT CAM, IT THROWS ERROR!
+//            Camera.Parameters parameters = mCamera.getParameters();
+//            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+//            mCamera.setParameters(parameters);
 
             mCamera.setPreviewTexture(mSurfaceTexture);
             mCamera.startPreview();
@@ -286,7 +298,7 @@ public class MyCameraActivity extends AppCompatActivity implements TextureView.S
     }
 
     public void startReview() {
-        Intent intent = new Intent(MyCameraActivity.this, MainActivity.class);
+        Intent intent = new Intent(CameraActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
