@@ -22,26 +22,15 @@
         android:configChanges="orientation"
         android:screenOrientation="portrait">
 
-        <activity
-            android:name=".camera.CameraActivity"
-            android:theme="@style/AppTheme_NoActionBar">
-        </activity>
+        <activity android:name=".gallery.GalleryActivity"></activity>
 
-        <activity android:name=".gallery.GalleryActivity">
-
-        </activity>
+        <activity android:name=".camera.CameraActivity" android:theme="@style/AppTheme_NoActionBar" />
 
         <activity android:name=".gallery.ImageActivity" android:theme="@style/AppTheme_NoActionBar" />
 
-        <activity android:name=".Upload">
-        </activity>
+        <activity android:name=".Upload"></activity>
 
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".MainActivity"></activity>
 
     </application>
 

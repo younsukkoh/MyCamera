@@ -2,6 +2,7 @@ package com.younsukkoh.foundation.mycamera.gallery;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,9 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.younsukkoh.foundation.mycamera.R;
@@ -39,15 +39,18 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by Younsuk on 1/1/2017.
+ * Created by Younsuk Koh on 1/1/2017.
+ * Updated by Younsuk Koh on 3/28/2017.
  */
 
 public class GalleryActivity extends AppCompatActivity {
 
     private final static String TAG = GalleryActivity.class.getSimpleName();
 
+    // Butter Knife utility for binding views
     private Unbinder mUnbinder;
 
+    // Action mode activated upon long click
     private ActionMode mActionMode;
     private List<View> mActivatedViews;
     private List<File> mActivatedImages;
@@ -59,6 +62,7 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Request users for dangerous permissions
         RuntimePermissions.checkAndRequestPermissions(getApplicationContext(), GalleryActivity.this, RuntimePermissions.CAMERA_PERMISSIONS);
 
         setUpUI();
@@ -74,6 +78,7 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Use camera to take more pictures
             case R.id.gam_camera:
                 Intent intent = new Intent(GalleryActivity.this, CameraActivity.class);
                 startActivity(intent);
@@ -107,18 +112,22 @@ public class GalleryActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
     }
 
+    /**
+     * @return Get directory that holds image files in my app folder
+     */
     private File[] getImageFiles() {
-        // Get directory that holds image files in my app folder
         File galleryDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath(), getString(R.string.app_name));
 
         return galleryDirectory.listFiles();
     }
 
     private void setUpRecyclerView() {
+        // If initialized for the first time
         if (mImageAdapter == null) {
             mImageAdapter = new ImageAdapter();
             mRecyclerView.setAdapter(mImageAdapter);
         }
+        // Otherwise notify just the changes
         else {
             mImageAdapter.notifyDataSetChanged();
         }
@@ -140,10 +149,6 @@ public class GalleryActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------//
 
     public class ImageAdapter extends RecyclerView.Adapter<ImageHolder> {
-
-        public ImageAdapter() {
-
-        }
 
         @Override
         public ImageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -216,8 +221,6 @@ public class GalleryActivity extends AppCompatActivity {
                 mActionMode = startSupportActionMode(new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        mode.setTitle("1 Item Selected");
-
                         MenuInflater inflater = mode.getMenuInflater();
                         inflater.inflate(R.menu.gallery_activity_menu_activated, menu);
 
@@ -235,13 +238,28 @@ public class GalleryActivity extends AppCompatActivity {
                     @Override
                     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                         switch (item.getItemId()) {
+                            // Delete items
                             case R.id.gam_delete:
-                                for (int i = 0; i < mActivatedImages.size(); i ++)
-                                    deleteImage(mActivatedImages.get(i));
-                                // Close action mode
-                                mActionMode.finish();
-                                // Update recycler view
-                                setUpRecyclerView();
+                                // Display Dialog
+                                new AlertDialog.Builder(GalleryActivity.this)
+                                        .setTitle("Warning")
+                                        .setMessage("Are you sure you want to delete " + mActivatedViews.size() + " images?")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int x) {
+                                                for (int i = 0; i < mActivatedImages.size(); i ++)
+                                                    deleteImage(mActivatedImages.get(i));
+                                                // Close action mode
+                                                mActionMode.finish();
+                                                // Update recycler view
+                                                setUpRecyclerView();
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, null)
+                                        .show();
+                                return true;
+                            // Upload items
+                            case R.id.gam_upload:
 
                                 return true;
                             default:
@@ -251,15 +269,16 @@ public class GalleryActivity extends AppCompatActivity {
 
                     @Override
                     public void onDestroyActionMode(ActionMode mode) {
-
+                        // clear all choices
                         clearActivatedView();
 
                         mActionMode = null;
                         mActivatedViews = null;
                         mActivatedImages = null;
+
                     }
                 });
-
+                // activate the view that was long clicked
                 activateView(mImageView);
             }
             return true;
@@ -288,6 +307,8 @@ public class GalleryActivity extends AppCompatActivity {
             // Add selected view
             mActivatedViews.add(view);
 
+            // Show number of items selected
+            mActionMode.setTitle(mActivatedImages.size() + " Selected");
         }
 
         /**
@@ -311,6 +332,9 @@ public class GalleryActivity extends AppCompatActivity {
 
             // Remove selected view
             mActivatedViews.remove(view);
+
+            // Show number of items selected
+            mActionMode.setTitle(mActivatedImages.size() + " Selected");
         }
 
         /**
