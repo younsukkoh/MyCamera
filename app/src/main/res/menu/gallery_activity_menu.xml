@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/gam_share"
+        android:id="@+id/gam_camera"
         android:title="Share"
-        android:icon="@drawable/share_black"
+        android:icon="@android:drawable/ic_menu_camera"
         app:showAsAction="always" />
 
 </menu>

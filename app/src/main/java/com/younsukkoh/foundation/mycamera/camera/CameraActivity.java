@@ -22,8 +22,8 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.younsukkoh.foundation.mycamera.MainActivity;
 import com.younsukkoh.foundation.mycamera.R;
+import com.younsukkoh.foundation.mycamera.gallery.GalleryActivity;
 import com.younsukkoh.foundation.mycamera.util.Constants;
 
 import java.io.File;
@@ -61,7 +61,6 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
 
     @BindView(R.id.ca_pb_progressBar)
     ProgressBar mProgressBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,6 +253,12 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
         Log.i(Constants.DEBUG, "On? " + flashOn);
     }
 
+    @OnClick(R.id.ca_b_gallery)
+    void goToGallery(View view) {
+        Intent intent = new Intent(CameraActivity.this, GalleryActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Open camera and start preview
      *
@@ -270,9 +275,11 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
 
             // Set camera to continually auto-focus
             // TODO WHEN USING FRONT CAM, IT THROWS ERROR!
-//            Camera.Parameters parameters = mCamera.getParameters();
-//            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-//            mCamera.setParameters(parameters);
+            if (cameraFacing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                Camera.Parameters parameters = mCamera.getParameters();
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                mCamera.setParameters(parameters);
+            }
 
             mCamera.setPreviewTexture(mSurfaceTexture);
             mCamera.startPreview();
@@ -295,11 +302,6 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
             mCamera.release();
             mCamera = null;
         }
-    }
-
-    public void startReview() {
-        Intent intent = new Intent(CameraActivity.this, MainActivity.class);
-        startActivity(intent);
     }
 
     @Override

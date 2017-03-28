@@ -6,34 +6,21 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/ma_et_first_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="first name"/>
-
-    <EditText
-        android:id="@+id/ma_et_last_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="last name" />
-
-    <EditText
-        android:id="@+id/ma_et_user_name"
+        android:id="@+id/ma2_et_user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="user name" />
 
     <EditText
-        android:id="@+id/ma_et_password"
+        android:id="@+id/ma2_et_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="password name" />
 
     <Button
-        android:id="@+id/ma_b_upload"
+        android:id="@+id/ma2_b_check"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="UPLOAD"
-        android:onClick="upload"/>
+        android:text="check" />
 
 </LinearLayout>

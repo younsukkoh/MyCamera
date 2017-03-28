@@ -3,6 +3,7 @@ package com.younsukkoh.foundation.mycamera.gallery;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,11 +20,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.younsukkoh.foundation.mycamera.R;
+import com.younsukkoh.foundation.mycamera.camera.CameraActivity;
 import com.younsukkoh.foundation.mycamera.util.Constants;
+import com.younsukkoh.foundation.mycamera.util.RuntimePermissions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,6 +59,8 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        RuntimePermissions.checkAndRequestPermissions(getApplicationContext(), GalleryActivity.this, RuntimePermissions.CAMERA_PERMISSIONS);
+
         setUpUI();
         setUpRecyclerView();
     }
@@ -62,6 +69,34 @@ public class GalleryActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.gallery_activity_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.gam_camera:
+                Intent intent = new Intent(GalleryActivity.this, CameraActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+
+        if (requestCode == RuntimePermissions.REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(GalleryActivity.this, CameraActivity.class);
+                startActivity(intent);
+            }
+            else if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                RuntimePermissions.showPermissionDialog(getApplicationContext(), GalleryActivity.this, RuntimePermissions.CAMERA_PERMISSIONS);
+            }
+        }
+
     }
 
     private void setUpUI() {

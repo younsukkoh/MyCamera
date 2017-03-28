@@ -9,4 +9,10 @@
         android:icon="@android:drawable/ic_menu_delete"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/gam_upload"
+        android:title="Upload"
+        android:icon="@android:drawable/ic_menu_share"
+        app:showAsAction="always" />
+
 </menu>
