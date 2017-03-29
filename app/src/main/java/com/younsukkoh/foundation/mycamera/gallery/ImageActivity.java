@@ -14,6 +14,8 @@ import com.younsukkoh.foundation.mycamera.util.Constants;
 import java.io.File;
 
 /**
+ * Class for displaying a single image onto the screen
+ *
  * Created by Younsuk on 1/15/2017.
  */
 
@@ -22,6 +24,12 @@ public class ImageActivity extends AppCompatActivity {
     ImageView mImageView;
     File mImageFile;
 
+    /**
+     *
+     * @param context
+     * @param file Image file that will be displayed
+     * @return intent for starting this activity
+     */
     public static Intent newIntent(Context context, File file) {
         Intent intent = new Intent(context, ImageActivity.class);
         intent.putExtra(Constants.EXTRA_IMAGE_FILE, file);
@@ -38,6 +46,9 @@ public class ImageActivity extends AppCompatActivity {
         setUpUI();
     }
 
+    /**
+     * Set up user interface
+     */
     private void setUpUI() {
         setContentView(R.layout.image_activity);
 
@@ -45,6 +56,7 @@ public class ImageActivity extends AppCompatActivity {
 
         mImageView = (ImageView) findViewById(R.id.ia_iv_image);
 
+        // Load the image
         Glide.with(getApplicationContext())
                 .load(mImageFile)
                 .placeholder(R.drawable.place_holder_gray)

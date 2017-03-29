@@ -39,6 +39,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
+ * Class for custom camera used by the application
+ *
  * Created by Younsuk on 12/9/2016.
  */
 
@@ -48,9 +50,12 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
 
     private Camera mCamera;
     private SurfaceTexture mSurfaceTexture;
+    // True if camera is facing back, false if the camera is facing front
     private boolean mCameraFacingBack = true;
+    // Butter Knife Utility for binding views
     private Unbinder mUnbinder;
 
+    // For displaying preview
     @BindView(R.id.ca_tv_cameraPreview)
     TextureView mTextureView;
     @BindView(R.id.ca_b_capture)
@@ -120,8 +125,6 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
 
     @OnClick(R.id.ca_b_capture)
     void capture(View view) {
-        Log.i(Constants.DEBUG, "clicked");
-
         takePicture();
     }
 
@@ -135,8 +138,6 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
                 new Camera.PictureCallback() {
                     @Override
                     public void onPictureTaken(byte[] bytes, Camera camera) {
-                        Log.i(Constants.DEBUG, "onPictureTaken: Start!");
-
                         File image = getImageFile();
                         Bitmap bitmap = getImageBitmap(bytes);
 
@@ -146,7 +147,7 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                             fos.close();
 
-                            Log.i(Constants.DEBUG, "File created!");
+                            Log.i(TAG, "File created!");
 
                             addImageToGallery(image);
 
@@ -159,7 +160,7 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
                             else
                                 openCamera_startPreview(Camera.CameraInfo.CAMERA_FACING_FRONT);
 
-                            Log.i(Constants.DEBUG, "onPictureTaken: All Done!");
+                            Log.i(TAG, "onPictureTaken: All Done!");
 
                             mProgressBar.setVisibility(View.INVISIBLE);
                             mCapture.setEnabled(true);
@@ -184,7 +185,7 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
             return null;
         }
         else {
-            Log.i(Constants.DEBUG, "Empty file created.");
+            Log.i(TAG, "Empty file created.");
 
             // File directory created for image, path/IMG_date
             return new File(directory.getPath() + File.separator + "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
@@ -250,7 +251,7 @@ public class CameraActivity extends AppCompatActivity implements TextureView.Sur
         }
         mCamera.setParameters(parameters);
 
-        Log.i(Constants.DEBUG, "On? " + flashOn);
+        Log.i(TAG, "On? " + flashOn);
     }
 
     @OnClick(R.id.ca_b_gallery)

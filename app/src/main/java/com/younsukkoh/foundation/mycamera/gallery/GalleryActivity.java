@@ -146,8 +146,9 @@ public class GalleryActivity extends AppCompatActivity {
         mUnbinder.unbind();
     }
 
-    //----------------------------------------------------------------------------------------------//
-
+    /**
+     * Adapter for Images
+     */
     public class ImageAdapter extends RecyclerView.Adapter<ImageHolder> {
 
         @Override
@@ -160,7 +161,6 @@ public class GalleryActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ImageHolder holder, int position) {
-            Log.i(Constants.DEBUG, "Position 1 : " + position);
             holder.bindImage(getImageFiles()[position]);
         }
 
@@ -171,8 +171,9 @@ public class GalleryActivity extends AppCompatActivity {
 
     } // close Image Adapter
 
-    //----------------------------------------------------------------------------------------------//
-
+    /**
+     * Image Holder for each images
+     */
     public class ImageHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         ImageView mImageView;
@@ -236,7 +237,7 @@ public class GalleryActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
                         switch (item.getItemId()) {
                             // Delete items
                             case R.id.gam_delete:
@@ -258,9 +259,32 @@ public class GalleryActivity extends AppCompatActivity {
                                         .setNegativeButton(android.R.string.no, null)
                                         .show();
                                 return true;
+
                             // Upload items
                             case R.id.gam_upload:
-
+                                // Allow only 1 image to be uploaded
+                                if (mActivatedViews.size() == 1) {
+                                    // Display Dialog
+                                    new AlertDialog.Builder(GalleryActivity.this)
+                                            .setTitle("Image Selected for Upload")
+                                            .setMessage("Are you sure you want to upload this image?")
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    new ImageUpload(getApplicationContext()).execute(mActivatedImages.get(0));
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.no, null)
+                                            .show();
+                                }
+                                else {
+                                    // Display Dialog
+                                    new AlertDialog.Builder(GalleryActivity.this)
+                                            .setTitle("Alert")
+                                            .setMessage("Only 1 image can be uploaded at a time.")
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .show();
+                                }
                                 return true;
                             default:
                                 return false;
